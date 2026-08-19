@@ -1,16 +1,8 @@
 # Meet Parrot 🦜
 
-```
-         __
-        /  \___
-       |  X    \        promptwl
-       |   \    \___    — kept by Parrot —
-        \   \      /
-         \___\____/
-          |  ||
-         (___)|
-           |__|
-```
+<p align="center">
+  <img src="assets/parrot.svg" alt="Parrot, the promptwl mascot" width="220">
+</p>
 
 **Parrot** is the coding-agent mascot and keeper of `promptwl`.
 

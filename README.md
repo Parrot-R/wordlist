@@ -1,18 +1,19 @@
-<!--
-        __
-       /  \___
-      |  X    \        promptwl
-      |   \    \___    — kept by Parrot 🦜 —
-       \   \      /
-        \___\____/
-         |  ||
-        (___)|
-          |__|
--->
+<p align="center">
+  <img src="assets/parrot.svg" alt="Parrot, the promptwl mascot" width="180">
+</p>
 
-# promptwl 🦜
+<h1 align="center">promptwl 🦜</h1>
 
-**A red-team & guardrail wordlist for LLMs. SecLists, but for language models.**
+<p align="center"><strong>A red-team &amp; guardrail wordlist for LLMs. SecLists, but for language models.</strong></p>
+
+<p align="center">
+  <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-160%2B-e4572e">
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
+  <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">
+</p>
+
+---
 
 > A parrot repeats what it hears without understanding it. So does a language model
 > handed the wrong input. This repo is [**Parrot**](MASCOT.md)'s field notebook of every

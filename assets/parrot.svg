@@ -1,0 +1,47 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Parrot, the promptwl mascot">
+  <title>Parrot — the promptwl mascot</title>
+
+  <!-- perch -->
+  <rect x="70" y="330" width="260" height="18" rx="9" fill="#6d4c34"/>
+  <rect x="70" y="330" width="260" height="7" rx="3.5" fill="#845d41"/>
+
+  <!-- tail (African grey red) -->
+  <path d="M182 300 L150 392 L200 356 L250 392 L218 300 Z" fill="#e4572e"/>
+  <path d="M200 320 L200 372" stroke="#c8431f" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- feet -->
+  <path d="M178 322 q-8 12 -16 12 M178 322 q0 14 -2 16 M178 322 q8 12 14 10" stroke="#33373b" stroke-width="6" stroke-linecap="round" fill="none"/>
+  <path d="M222 322 q-8 12 -14 10 M222 322 q0 14 2 16 M222 322 q8 12 16 12" stroke="#33373b" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+  <!-- body -->
+  <ellipse cx="200" cy="238" rx="72" ry="96" fill="#9aa0a6"/>
+  <!-- wing -->
+  <path d="M244 178 q40 44 20 118 q-24 30 -44 8 q10 -70 6 -118 q10 -14 18 -8 Z" fill="#5f6368"/>
+  <path d="M250 210 q18 30 8 78" stroke="#4a4e52" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M236 214 q16 32 6 82" stroke="#4a4e52" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+  <!-- head -->
+  <circle cx="196" cy="140" r="58" fill="#9aa0a6"/>
+  <!-- white face patch (African grey signature) -->
+  <ellipse cx="176" cy="146" rx="30" ry="34" fill="#eef1f3"/>
+
+  <!-- beak (hooked, facing left) -->
+  <path d="M150 138 q-40 2 -44 26 q22 10 40 -2 q-4 -10 4 -24 Z" fill="#2b2f33"/>
+  <path d="M110 164 q14 12 30 8" stroke="#1c1f22" stroke-width="4" stroke-linecap="round" fill="none"/>
+
+  <!-- eye -->
+  <circle cx="176" cy="132" r="15" fill="#f4b400"/>
+  <circle cx="174" cy="132" r="8" fill="#141414"/>
+  <circle cx="178" cy="128" r="3" fill="#ffffff"/>
+
+  <!-- crest feathers -->
+  <path d="M214 92 q10 -26 26 -30 q-6 18 -12 30 Z" fill="#5f6368"/>
+  <path d="M224 100 q16 -22 34 -22 q-12 16 -22 26 Z" fill="#6f757b"/>
+
+  <!-- terminal speech bubble: it repeats what it hears -->
+  <g>
+    <rect x="238" y="60" width="118" height="66" rx="12" fill="#0d1117"/>
+    <path d="M250 126 l-14 22 l30 -12 Z" fill="#0d1117"/>
+    <text x="258" y="104" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="34" fill="#3fb950">&gt;_</text>
+  </g>
+</svg>
