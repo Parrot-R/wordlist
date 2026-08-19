@@ -14,3 +14,5 @@ jobs:
           python-version: "3.12"
       - name: Validate manifest & corpus load
         run: python3 scripts/validate.py
+      - name: Run recall demo (smoke test)
+        run: python3 examples/recall_demo.py

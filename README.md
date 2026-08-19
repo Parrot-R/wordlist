@@ -94,6 +94,26 @@ print(f"recall: {evaluate(my_guardrail):.1%}")
 
 Pair it with your own benign corpus to measure false-positive rate, and you have a two-sided guardrail benchmark.
 
+## See it yourself (30-second demo)
+
+The repo ships a runnable demo: a deliberately naive — but realistic — English keyword filter, scored against the whole corpus.
+
+```bash
+python3 examples/recall_demo.py
+```
+
+```
+HEADLINE — same phrasing, English vs translated
+----------------------------------------------------
+English (injection etc.)      55%   █████████████···········
+The same, translated           0%   ························
+
+  → the filter catches ~55% of these attacks in English
+    and ~0% the moment the attacker switches language.
+```
+
+The same filter also scores **0%** on encoding evasion, indirect/agent injection, and glitch tokens — it can only see the English phrasings it was written for. That's the whole point: **you can't fix what you don't measure.** Wire promptwl into CI and watch the number.
+
 ## Scope & ethics
 
 This is a **defensive** project. It catalogs *patterns that are already publicly documented* (OWASP LLM Top 10, published red-team research, open-source tools like garak and Giskard) and organizes them so defenders can build and test filters, guardrails, and evals.
