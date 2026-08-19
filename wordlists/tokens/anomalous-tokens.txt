@@ -1,0 +1,27 @@
+# category: tokens / anomalous-tokens
+# purpose: publicly-known "glitch"/anomalous tokens that caused undefined behavior in some
+#          tokenizers/models (the SolidGoldMagikarp family and relatives).
+# use: regression-test tokenizer handling and model robustness to rare vocabulary items.
+# source-level: public research (Rumbelow & Watkins, 2023) and follow-on writeups.
+# NOTE: applicability is model/tokenizer-specific and largely historical; kept for coverage/testing.
+SolidGoldMagikarp
+StreamerBot
+TheNitrome
+RandomRedditorWithNo
+cloudfront
+externalToEVA
+guiActiveUn
+davidjl
+GoldMagikarp
+Smartstocks
+PsyNetMessage
+embedreportprint
+rawdownload
+SpaceEngineers
+DevOnline
+attRot
+EStreamFrame
+ForgeModLoader
+oreAndOnline
+InstoreAndOnline
+BuyableInstoreAndOnline

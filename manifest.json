@@ -1,0 +1,92 @@
+{
+  "name": "promptwl",
+  "version": "0.1.0",
+  "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
+  "license": "MIT",
+  "intent": "defensive",
+  "schema_version": 1,
+  "categories": [
+    {
+      "id": "injection",
+      "title": "Prompt Injection",
+      "owasp": "LLM01",
+      "files": [
+        {
+          "path": "wordlists/injection/instruction-override.txt",
+          "title": "Instruction override",
+          "description": "Phrases that attempt to override or supersede prior instructions."
+        },
+        {
+          "path": "wordlists/injection/delimiter-confusion.txt",
+          "title": "Delimiter confusion",
+          "description": "Markers impersonating role/turn boundaries or system framing."
+        }
+      ]
+    },
+    {
+      "id": "jailbreak",
+      "title": "Jailbreak",
+      "owasp": "LLM01",
+      "files": [
+        {
+          "path": "wordlists/jailbreak/persona-override.txt",
+          "title": "Persona override",
+          "description": "Role-play framings that swap the model into an unrestricted persona."
+        },
+        {
+          "path": "wordlists/jailbreak/refusal-suppression.txt",
+          "title": "Refusal suppression",
+          "description": "Phrases pressuring the model not to refuse or to drop caveats."
+        }
+      ]
+    },
+    {
+      "id": "extraction",
+      "title": "System Prompt / Data Extraction",
+      "owasp": "LLM07",
+      "files": [
+        {
+          "path": "wordlists/extraction/system-prompt-leak.txt",
+          "title": "System prompt leak",
+          "description": "Probes that attempt to reveal the hidden system prompt or config."
+        }
+      ]
+    },
+    {
+      "id": "evasion",
+      "title": "Filter Evasion",
+      "owasp": "LLM01",
+      "files": [
+        {
+          "path": "wordlists/evasion/encoding-obfuscation.txt",
+          "title": "Encoding & obfuscation",
+          "description": "Cues that a payload is smuggled via encoding, homoglyphs, or spacing."
+        }
+      ]
+    },
+    {
+      "id": "agents",
+      "title": "Agent / Indirect Injection",
+      "owasp": "LLM01",
+      "files": [
+        {
+          "path": "wordlists/agents/tool-and-rag-injection.txt",
+          "title": "Tool & RAG injection",
+          "description": "Indirect-injection phrases planted in docs, tool output, web pages, or email."
+        }
+      ]
+    },
+    {
+      "id": "tokens",
+      "title": "Anomalous Tokens",
+      "owasp": null,
+      "files": [
+        {
+          "path": "wordlists/tokens/anomalous-tokens.txt",
+          "title": "Anomalous / glitch tokens",
+          "description": "Publicly-known glitch tokens for tokenizer/model robustness testing."
+        }
+      ]
+    }
+  ]
+}
