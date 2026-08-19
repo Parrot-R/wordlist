@@ -8,7 +8,8 @@
 
 <p align="center">
   <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
-  <img alt="phrases" src="https://img.shields.io/badge/phrases-160%2B-e4572e">
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-240%2B-e4572e">
+  <img alt="languages" src="https://img.shields.io/badge/languages-11-845d41">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">
 </p>
@@ -26,7 +27,7 @@ Every pentester `git clone`s [SecLists](https://github.com/danielmiessler/SecLis
 ```python
 import promptwl
 
-for entry in promptwl.load():                 # 160+ phrases, with metadata
+for entry in promptwl.load():                 # 240+ phrases, with metadata
     verdict = my_guardrail(entry.text)        # your classifier under test
     assert verdict == "block", f"missed: {entry.text!r} ({entry.category})"
 ```
@@ -50,6 +51,7 @@ for entry in promptwl.load():                 # 160+ phrases, with metadata
 | `extraction/` | LLM07 | System-prompt & config leak probes |
 | `evasion/` | LLM01 | Encoding, homoglyph, and spacing obfuscation |
 | `agents/` | LLM01 | **Indirect** injection planted in docs, tool output, web pages, email (the agent/RAG attack surface) |
+| `multilingual/` | LLM01 | Core override/jailbreak patterns in 10 languages — because English-only filters silently fail |
 | `tokens/` | — | Publicly-known anomalous / "glitch" tokens for tokenizer robustness |
 
 Each `.txt` is one phrase per line; lines starting with `#` are metadata/comments. Load them however you like — plain `grep`, `cat`, or the zero-dependency Python package.
@@ -69,7 +71,8 @@ cat wordlists/injection/*.txt
 import promptwl
 
 promptwl.categories()          # ['injection', 'jailbreak', 'extraction', ...]
-promptwl.stats()               # {'injection': 39, ..., 'total': 160}
+promptwl.stats()               # {'injection': 39, ..., 'total': 240}
+promptwl.phrases("multilingual")  # non-English patterns for one category
 promptwl.phrases("agents")     # list[str] for one category
 for e in promptwl.load():      # Entry(text, category, file, title)
     ...

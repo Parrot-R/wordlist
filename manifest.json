@@ -77,6 +77,23 @@
       ]
     },
     {
+      "id": "multilingual",
+      "title": "Multilingual Injection",
+      "owasp": "LLM01",
+      "files": [
+        { "path": "wordlists/multilingual/es.txt", "title": "Spanish (es)", "description": "Core override/jailbreak patterns in Spanish." },
+        { "path": "wordlists/multilingual/fr.txt", "title": "French (fr)", "description": "Core override/jailbreak patterns in French." },
+        { "path": "wordlists/multilingual/de.txt", "title": "German (de)", "description": "Core override/jailbreak patterns in German." },
+        { "path": "wordlists/multilingual/pt.txt", "title": "Portuguese (pt)", "description": "Core override/jailbreak patterns in Portuguese." },
+        { "path": "wordlists/multilingual/it.txt", "title": "Italian (it)", "description": "Core override/jailbreak patterns in Italian." },
+        { "path": "wordlists/multilingual/ru.txt", "title": "Russian (ru)", "description": "Core override/jailbreak patterns in Russian." },
+        { "path": "wordlists/multilingual/zh.txt", "title": "Chinese (zh)", "description": "Core override/jailbreak patterns in Simplified Chinese." },
+        { "path": "wordlists/multilingual/ar.txt", "title": "Arabic (ar)", "description": "Core override/jailbreak patterns in Arabic." },
+        { "path": "wordlists/multilingual/hi.txt", "title": "Hindi (hi)", "description": "Core override/jailbreak patterns in Hindi." },
+        { "path": "wordlists/multilingual/ja.txt", "title": "Japanese (ja)", "description": "Core override/jailbreak patterns in Japanese." }
+      ]
+    },
+    {
       "id": "tokens",
       "title": "Anomalous Tokens",
       "owasp": null,
