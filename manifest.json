@@ -1,6 +1,6 @@
 {
   "name": "promptwl",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
   "license": "MIT",
   "intent": "defensive",
@@ -20,6 +20,11 @@
           "path": "wordlists/injection/delimiter-confusion.txt",
           "title": "Delimiter confusion",
           "description": "Markers impersonating role/turn boundaries or system framing."
+        },
+        {
+          "path": "wordlists/injection/payload-splitting.txt",
+          "title": "Payload splitting",
+          "description": "Instructions assembled across multiple turns, variables, or fragments to evade single-message filters."
         }
       ]
     },
@@ -37,6 +42,16 @@
           "path": "wordlists/jailbreak/refusal-suppression.txt",
           "title": "Refusal suppression",
           "description": "Phrases pressuring the model not to refuse or to drop caveats."
+        },
+        {
+          "path": "wordlists/jailbreak/hypothetical-framing.txt",
+          "title": "Hypothetical / fictional framing",
+          "description": "Fictional, academic, or hypothetical wrappers used to try to bypass refusal behavior."
+        },
+        {
+          "path": "wordlists/jailbreak/authority-impersonation.txt",
+          "title": "Authority impersonation",
+          "description": "Claims of developer/admin/special authorization used to pressure the model into dropping constraints."
         }
       ]
     },
@@ -49,6 +64,11 @@
           "path": "wordlists/extraction/system-prompt-leak.txt",
           "title": "System prompt leak",
           "description": "Probes that attempt to reveal the hidden system prompt or config."
+        },
+        {
+          "path": "wordlists/extraction/training-data-extraction.txt",
+          "title": "Training data extraction",
+          "description": "Probes that try to elicit memorized training data, verbatim copyrighted text, or personal data."
         }
       ]
     },
@@ -66,6 +86,11 @@
           "path": "wordlists/evasion/invisible-characters.txt",
           "title": "Invisible characters",
           "description": "Zero-width and Unicode Tags codepoints used for ASCII smuggling."
+        },
+        {
+          "path": "wordlists/evasion/language-switching.txt",
+          "title": "Language switching",
+          "description": "Cues that a payload is smuggled via translation, code-switching, or a low-resource language."
         }
       ]
     },
@@ -78,6 +103,11 @@
           "path": "wordlists/agents/tool-and-rag-injection.txt",
           "title": "Tool & RAG injection",
           "description": "Indirect-injection phrases planted in docs, tool output, web pages, or email."
+        },
+        {
+          "path": "wordlists/agents/memory-and-session-poisoning.txt",
+          "title": "Memory & session poisoning",
+          "description": "Patterns aimed at agents with persistent memory, trying to plant instructions that survive into future sessions."
         }
       ]
     },
@@ -96,6 +126,18 @@
         { "path": "wordlists/multilingual/ar.txt", "title": "Arabic (ar)", "description": "Core override/jailbreak patterns in Arabic." },
         { "path": "wordlists/multilingual/hi.txt", "title": "Hindi (hi)", "description": "Core override/jailbreak patterns in Hindi." },
         { "path": "wordlists/multilingual/ja.txt", "title": "Japanese (ja)", "description": "Core override/jailbreak patterns in Japanese." }
+      ]
+    },
+    {
+      "id": "multimodal",
+      "title": "Multimodal Injection",
+      "owasp": "LLM01",
+      "files": [
+        {
+          "path": "wordlists/multimodal/image-and-file-injection.txt",
+          "title": "Image & file injection",
+          "description": "Instructions hidden in non-text channels (image text, alt-text, metadata, document layers) read by multimodal pipelines."
+        }
       ]
     },
     {

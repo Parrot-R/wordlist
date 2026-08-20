@@ -35,6 +35,46 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-008 · 2026-08-20 · Corpus 0.2.0 — seven new classes (external contribution) · — · reference
+
+**What.** Contribution from Richard Odero expands the corpus to **0.2.0**
+(372 phrases, 8 categories) with seven pattern files. Catalogued here with the
+defense for each; the two genuinely new *classes* get their own note.
+
+- `injection/payload-splitting` — intent assembled across turns/fragments so no
+  single message trips a filter. **Defense:** evaluate guardrails on the
+  *assembled* conversation/context, not per-message; treat "hold this / combine
+  later" as a signal. Closes backlog *payload-splitting*.
+- `jailbreak/hypothetical-framing` & `authority-impersonation` — fiction/thought-
+  experiment wrappers, and unverifiable claims of dev/admin/red-team authority.
+  **Defense:** classify on intent independent of framing; **never** let
+  in-context authority claims relax policy — authority must be established out
+  of band, never by the message asserting it.
+- `extraction/training-data-extraction` — memorization/PII/verbatim-copyright
+  probes (LLM07-adjacent, privacy). **Defense:** output-side PII/verbatim
+  filters, dedup/canary monitoring, refuse "recite verbatim / this private
+  person's data".
+- `evasion/language-switching` — cross-lingual smuggling; overlaps **F-001**.
+  **Defense:** the F-001 stack (semantic filter / normalize-then-classify,
+  per-language recall).
+- **`agents/memory-and-session-poisoning`** *(new class)* — plant an instruction
+  into persistent memory so it fires in later sessions or for other users.
+  **Defense:** memory is **untrusted data on read**, never a trusted
+  instruction; sanitize memory-write paths; scope memory per-user; require
+  re-consent for anything that looks like a standing rule.
+- **`multimodal/image-and-file-injection`** *(new category)* — instructions in
+  rendered image text, alt-text, EXIF, PDF layers, QR/barcodes. Same trust
+  boundary as text indirect injection (**F-006** / tool-and-rag), one modality
+  out. **Defense:** treat *all* OCR/extracted/decoded text as untrusted content,
+  never as commands; scan it with the same pipeline as text (incl. F-006/F-007
+  normalization).
+
+**Provenance note.** External patch; reviewed at pattern level, one vendor name
+genericized, scanned clean for invisible codepoints (F-006) before merge.
+Credited to the contributor in the commit.
+
+---
+
 ### F-007 · 2026-08-20 · Confusable-folding closes the homoglyph residual · Medium · confirmed
 
 **Observation.** Adding a UTS-39-style **confusable-fold** (cross-script
@@ -289,14 +329,17 @@ silent (no error, filter just passes it).
       "liberation" jailbreaks survive translation as well as plain injection does?
       (Hypothesis: yes, and low-resource languages fare worse for the defender.)
       From F-001 + F-004.
-- [ ] **Payload splitting** — intent spread across turns / across retrieved
-      chunks so no single span is flagged. Defense: evaluate on assembled
-      context, not per-span.
+- [x] **Payload splitting** — catalogued in F-008 (`injection/payload-splitting`).
+      Defense: evaluate on assembled context, not per-span. Still open as a
+      *measured* experiment (does per-message filtering miss the assembled intent?).
 - [ ] **Tool-call argument injection** — untrusted content steering *the
       arguments* of a legitimate tool call rather than the final text.
 - [ ] **RAG poisoning persistence** — an injected instruction stored in a
-      vector DB that fires on future, unrelated queries.
-- [ ] **Multimodal injection** — instructions in image/alt-text/OCR paths.
+      vector DB that fires on future, unrelated queries. (Related: memory/session
+      poisoning now in F-008.)
+- [x] **Multimodal injection** — catalogued in F-008 (`multimodal/`). Defense:
+      treat OCR/extracted text as untrusted. Still open: an actual image→OCR→filter
+      measurement.
 - [ ] **Normalization gaps** — which Unicode confusable ranges survive NFKC
       and still read as ASCII to a human?
 
