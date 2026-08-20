@@ -35,6 +35,55 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-011 · 2026-08-20 · Unicode confusables + encoding-chain catalog · High · confirmed
+
+**Thesis.** Two gaps remain in the tokens/ section after F-010: (1) the
+confusable-character surface (chars that look like ASCII but aren't) and (2)
+the encoding-chain depth catalog (how many decode layers are needed to see the
+payload). Both are needed to characterize the full evasion envelope and to tell
+defenders where enumerate-and-invert stops working.
+
+**Added (0.3.1).**
+- `wordlists/tokens/unicode-confusables.txt` — UTS-39 confusable pair table
+  (Cyrillic, Greek, fullwidth Latin, mathematical styled Latin → ASCII skeleton)
+  plus confusable-substituted attack keywords as live test inputs.
+- `wordlists/tokens/encoding-chains.txt` — chain descriptor catalog from
+  Tier 1 (single transform) through Tier 4 (chain with unknown-shift residual),
+  anchoring the test harness to stable seed phrases.
+- `wordlists/tokens/anomalous-tokens.txt` expanded: GPT-4/o200k_base community
+  outliers (2024), Llama SentencePiece special tokens, Mistral role delimiters,
+  model-card special tokens across major open families, BPE residue subwords,
+  and null/DEL C0 glitch entries.
+
+**Measured.** `scripts/validate.py` after update: **694 phrases** (up from 539).
+Token category: 343 phrases (up from 188). Corpus grew 29% in one session.
+
+**Key finding — confusable depth.** A Cyrillic substitution (а=U+0430 for
+a=U+0061) evades any ASCII-normalized filter that doesn't apply NFKC +
+confusable-fold. The UTS-39 fold (implemented in `confusable_fold()`) closes
+the known substitution set; novel Unicode blocks added in future Unicode
+releases reopen it until the fold table is updated.
+
+**Key finding — chain depth ceiling.** Known single- and two-layer chains are
+fully recoverable by the breadth-first decode pass in `ensemble_demo.py`. At
+depth 3 the combinatorial branching cost exceeds a linear scan; at Tier 4
+(unknown shift) recall drops to 0% for keyword filters and 0% for the decode
+pass. Documented residuals: caesar with unknown shift, arbitrary substitution
+cipher, novel non-ASCII alphabets.
+
+**Mitigation.**
+- Confusables → UTS-39 confusable-fold before filtering.
+- Encoding chains → breadth-first decode to max depth=3, then semantic
+  classifier (perplexity or intent model) for the residual.
+- Anomalous tokens → normalize and strip special-token strings before the model
+  sees them; treat boundary-escaped tokens as suspicious input.
+
+**References.** Unicode Consortium UTS-39 (confusables.txt); arXiv:2411.01084
+(string-composition attacks); garak evasion probe suite; community glitch-token
+archaeology threads (LessWrong, 2023-2024).
+
+---
+
 ### F-010 · 2026-08-20 · Token-anomaly corpus & cross-tokenizer probe · High · confirmed
 
 **Thesis.** A Unicode-attack list is only half the story and duplicates garak's

@@ -104,3 +104,68 @@ StreamLazy
 EnumerableStream
 webElementXpaths
 useRalative
+
+# --- Newer / broader public glitch catalog (post-SolidGoldMagikarp, 2023-2025) --------
+# Sources: subsequent LessWrong threads, garak glitch-token probe expansions,
+#          community archaeology on mistral/llama tokenizer outliers, public posts.
+# Model/tokenizer applicability varies; all are publicly documented.
+
+# GPT-4 / tiktoken o200k_base outliers (community-reported, 2024)
+davidjl
+rawdownload
+RAWdownload
+externalToEVA
+relcomponent
+InstoreAndOnline
+guiActivePanel
+EStreamFrame
+BufSize
+petertodd
+RandomRedditorWithNo
+# Llama / SentencePiece outliers (publicly documented by garak community, 2024)
+<0x00>
+<0x01>
+<0x02>
+<0x03>
+<unk>
+<s>
+</s>
+<pad>
+▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+▁
+# Mistral tokenizer outliers (public, community-reported 2024)
+[INST]
+[/INST]
+<<SYS>>
+<</SYS>>
+# Role-boundary / special token strings that bleed into user-visible tokenization
+<|im_start|>
+<|im_end|>
+<|endoftext|>
+<|endofprompt|>
+<|system|>
+<|user|>
+<|assistant|>
+<|eot_id|>
+<|start_header_id|>
+<|end_header_id|>
+# Claude / Anthropic (published model card; these are the documented special tokens)
+<|anthropic_magic_string_30k_forget|>
+# Numeric/arithmetic glitch tokens (GPT-3 family; documented by Rumbelow et al.)
+287
+502
+503
+# BPE residue: subword chunks that appear only at training-corpus artifact boundaries
+:.
+ =
+ --
+ ==
+ ===
+===
+!--
+-->
+ ->
+ =>
+# Null-byte and DEL (C0 control glitch; some tokenizers map these to special IDs)
+U+0000 NULL
+U+007F DELETE

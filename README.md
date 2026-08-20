@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
-  <img alt="phrases" src="https://img.shields.io/badge/phrases-530%2B-e4572e">
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-690%2B-e4572e">
   <img alt="languages" src="https://img.shields.io/badge/languages-11-845d41">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">

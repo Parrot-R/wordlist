@@ -1,6 +1,6 @@
 {
   "name": "promptwl",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
   "license": "MIT",
   "intent": "defensive",
@@ -164,6 +164,16 @@
           "path": "wordlists/tokens/boundary/separators.txt",
           "title": "Boundary separators",
           "description": "Real, exotic, and invisible separator codepoints that shift apparent token boundaries."
+        },
+        {
+          "path": "wordlists/tokens/unicode-confusables.txt",
+          "title": "Unicode confusables",
+          "description": "Confusable character pair table (UTS-39) and confusable-substituted attack keywords for homoglyph filter-bypass testing."
+        },
+        {
+          "path": "wordlists/tokens/encoding-chains.txt",
+          "title": "Encoding chain patterns",
+          "description": "Catalog of single- and multi-layer encoding chain patterns (leet, base64, rot13, reverse, and combinations) used to evade keyword filters; includes known-residual cases requiring semantic defense."
         }
       ]
     }
