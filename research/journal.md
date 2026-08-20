@@ -35,6 +35,71 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-004 · 2026-08-20 · Technique survey: Pliny the Liberator (Elder Plinius) · — · reference
+
+**Who.** *Pliny the Liberator* / *Elder Plinius* (`@elder_plinius`,
+[pliny.gg](https://pliny.gg/)) — the most prolific public LLM jailbreaker,
+known for jailbreaking frontier models within hours of release and for the
+open `L1B3RT4S` prompt collection. Studied here as a **defender's literature
+review**: we catalog his *technique classes and their countermeasures*, not
+his payloads (payloads are out of scope for this journal — see the masthead).
+
+**Technique classes he's associated with, and the defense for each:**
+
+1. **Universal / "skeleton-key" jailbreaks** — a single framing that
+   generalizes across models and harm categories.
+   *Defense:* don't rely on input matching; add an independent output-side
+   classifier and defense-in-depth. See Anthropic's *Constitutional
+   Classifiers* (arXiv:2501.18837) — classifiers trained on synthetic
+   variants, evaluated over thousands of red-team hours.
+
+2. **String-composition / encoding chains** — leetspeak, Base64, ROT13,
+   reversal, translation, Morse, *chained together* (e.g. translate → leet →
+   morse). Compounding transforms beat single-encoding filters and any one
+   normalizer; ensembling 20+ transforms sharply raises success
+   (arXiv:2411.01084). Directly generalizes our **F-002**.
+   *Defense:* iteratively decode + NFKC-normalize until stable, then run a
+   *semantic* classifier on the normalized form; treat "decode this" framing
+   as a signal, not an instruction; test with a transform ensemble.
+
+3. **Formatting / "divider" reframing** ("the Pliny divider" style) — visual
+   or structural separators that make an injected block read as a new,
+   authoritative turn.
+   *Defense:* never trust in-band formatting as a trust boundary; separate
+   roles structurally (API message roles), strip control markup from
+   untrusted spans. Generalizes **F-003**.
+
+4. **Persona / "liberation" role-play templates** (the `L1B3RT4S` /
+   Libertas family) — fictional or "unlocked" personas used to suppress
+   refusals.
+   *Defense:* classify on *intent*, independent of narrative framing; refusal
+   behavior must survive "it's just fiction / role-play" reframes. See
+   `wordlists/jailbreak/`.
+
+5. **Day-one jailbreaks of new releases** — community red-teamers break new
+   models within hours.
+   *Defense (process, not prompt):* adversarial testing *before* launch;
+   continuous post-launch monitoring; a fast patch/rollback loop; assume
+   novel bypasses exist and design for graceful failure, not perfect
+   prevention.
+
+6. **System-prompt leaks + prompt injection** — cited by him as core skills.
+   Covered by our `extraction/` and `injection/` categories.
+
+**Takeaway for promptwl.** His public corpus is *payloads*; our value-add is
+the **inverse** — the mechanism → defense mapping and a measurable test set.
+Backlog items B-string-ensemble and B-persona-translation below come directly
+from this survey.
+
+**Sources.**
+[pliny.gg](https://pliny.gg/) ·
+[Latent.Space interview](https://www.latent.space/p/jailbreaking-agi-pliny-the-liberator) ·
+[VentureBeat interview](https://venturebeat.com/ai/an-interview-with-the-most-prolific-jailbreaker-of-chatgpt-and-other-leading-llms) ·
+[Decrypt: day-one jailbreaks](https://decrypt.co/333858/openai-jailbreak-proof-new-models-hacked) ·
+arXiv:2411.01084 (String Compositions) · arXiv:2501.18837 (Constitutional Classifiers)
+
+---
+
 ### F-003 · 2026-08-20 · Delimiter / role-boundary spoofing · High · confirmed
 
 **Observation.** Untrusted content that embeds chat-template control markers
@@ -110,9 +175,13 @@ silent (no error, filter just passes it).
 
 ## Backlog — to investigate
 
-- [ ] **Cross-lingual jailbreak transfer** — do persona jailbreaks survive
-      translation as well as plain injection does? (Hypothesis: yes, and
-      low-resource languages fare worse for the defender.)
+- [ ] **B-string-ensemble** — measure how a chained/ensembled string-composition
+      attack (leetspeak → translate → morse …) fares against the F-002 defense
+      (iterative decode + NFKC + semantic classifier). From F-004 / arXiv:2411.01084.
+- [ ] **B-persona-translation** — **Cross-lingual jailbreak transfer**: do persona
+      "liberation" jailbreaks survive translation as well as plain injection does?
+      (Hypothesis: yes, and low-resource languages fare worse for the defender.)
+      From F-001 + F-004.
 - [ ] **Payload splitting** — intent spread across turns / across retrieved
       chunks so no single span is flagged. Defense: evaluate on assembled
       context, not per-span.
