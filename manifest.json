@@ -1,6 +1,6 @@
 {
   "name": "promptwl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
   "license": "MIT",
   "intent": "defensive",
@@ -149,6 +149,11 @@
           "path": "wordlists/tokens/anomalous-tokens.txt",
           "title": "Anomalous / glitch tokens",
           "description": "Publicly-known glitch tokens for tokenizer/model robustness testing."
+        },
+        {
+          "path": "wordlists/tokens/control-and-artifact.txt",
+          "title": "Control characters & encoding artifacts",
+          "description": "Control characters, zero-width/bidi, and BPE residue strings known to trigger anomalous model behavior."
         }
       ]
     }

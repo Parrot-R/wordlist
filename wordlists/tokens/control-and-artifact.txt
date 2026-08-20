@@ -1,0 +1,80 @@
+# category: tokens / control-and-artifact
+# purpose: publicly documented control characters, encoding artifacts, and tokenizer
+#          residue strings that have been observed to produce anomalous behavior
+#          (non-determinism at temperature 0, refusal to repeat, embedding-space
+#          outliers, or garbled decoding) in some models that share GPT-family
+#          or similar BPE vocabularies.
+# use: test tokenizer robustness, input sanitization, and model stability when
+#      confronted with low-level artifacts that rarely appear in ordinary text.
+# source-level: Rumbelow & Watkins SolidGoldMagikarp series (LessWrong / SERI-MATS),
+#               NVIDIA garak glitch probes, and subsequent public catalogs of
+#               under-trained / anomalous tokens. These are already-public
+#               defensive test strings.
+# NOTE: non-printable entries are written as escape notation (\xNN) or as "U+NNNN NAME",
+#       NOT literal bytes, so this file stays greppable and safe to store / scan clean.
+#       Decode them in your harness before feeding a tokenizer. Model/tokenizer-specific.
+
+# --- Control / non-printable characters (common in garak & original lists) ---
+\x00
+\x01
+\x02
+\x03
+\x04
+\x05
+\x06
+\x07
+\x08
+\x0e
+\x0f
+\x10
+\x11
+\x12
+\x13
+\x14
+\x15
+\x16
+\x17
+\x18
+\x19
+\x1a
+\x1b
+\x7f
+
+# --- Zero-width / bidirectional / formatting artifacts (Trojan Source, U+202x) ---
+U+200B ZERO WIDTH SPACE
+U+200E LEFT-TO-RIGHT MARK
+U+200F RIGHT-TO-LEFT MARK
+U+202A LEFT-TO-RIGHT EMBEDDING
+U+202B RIGHT-TO-LEFT EMBEDDING
+U+202C POP DIRECTIONAL FORMATTING
+U+202D LEFT-TO-RIGHT OVERRIDE
+U+202E RIGHT-TO-LEFT OVERRIDE
+U+FEFF ZERO WIDTH NO-BREAK SPACE (BOM)
+
+# --- Classic encoding / BPE residue artifacts (printable but highly anomalous) ---
+ÃÂÃÂ
+ÃÂÃÂÃÂÃÂ
+ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+ÃÂ
+ÛÛ
+\\\\\\\\\\\\\\\\
+.[
+"]=>
+":""},{"
+":[{"
+''."
+@#&
+cffffcc
+"$:/
+ --------
+
+# --- Japanese / CJK fragments frequently listed as anomalous ---
+覚醒
+裏覚醒
+ゼウス
+サーティワン
+龍契士
+龍喚士
+TAMADRA
+uyomi
+aterasu

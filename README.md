@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
-  <img alt="phrases" src="https://img.shields.io/badge/phrases-370%2B-e4572e">
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-490%2B-e4572e">
   <img alt="languages" src="https://img.shields.io/badge/languages-11-845d41">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">
@@ -27,7 +27,7 @@ Every pentester `git clone`s [SecLists](https://github.com/danielmiessler/SecLis
 ```python
 import promptwl
 
-for entry in promptwl.load():                 # 370+ phrases, with metadata
+for entry in promptwl.load():                 # 490+ phrases, with metadata
     verdict = my_guardrail(entry.text)        # your classifier under test
     assert verdict == "block", f"missed: {entry.text!r} ({entry.category})"
 ```
@@ -53,7 +53,7 @@ for entry in promptwl.load():                 # 370+ phrases, with metadata
 | `agents/` | LLM01 | **Indirect** injection in docs, tool output, web, email; persistent-memory poisoning |
 | `multilingual/` | LLM01 | Core override/jailbreak patterns in 10 languages — because English-only filters silently fail |
 | `multimodal/` | LLM01 | Instructions hidden in images, alt-text, file metadata, or document layers read by vision pipelines |
-| `tokens/` | — | Publicly-known anomalous / "glitch" tokens for tokenizer robustness |
+| `tokens/` | — | Anomalous / "glitch" tokens, control characters, and bidi (Trojan Source) artifacts for tokenizer robustness |
 
 Each `.txt` is one phrase per line; lines starting with `#` are metadata/comments. Load them however you like — plain `grep`, `cat`, or the zero-dependency Python package.
 
@@ -72,7 +72,7 @@ cat wordlists/injection/*.txt
 import promptwl
 
 promptwl.categories()          # ['injection', 'jailbreak', 'extraction', ...]
-promptwl.stats()               # {'injection': 57, ..., 'total': 372}
+promptwl.stats()               # {'injection': 57, ..., 'total': 498}
 promptwl.phrases("multilingual")  # non-English patterns for one category
 promptwl.phrases("agents")     # list[str] for one category
 for e in promptwl.load():      # Entry(text, category, file, title)

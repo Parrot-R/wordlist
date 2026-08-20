@@ -1,27 +1,106 @@
 # category: tokens / anomalous-tokens
-# purpose: publicly-known "glitch"/anomalous tokens that caused undefined behavior in some
-#          tokenizers/models (the SolidGoldMagikarp family and relatives).
-# use: regression-test tokenizer handling and model robustness to rare vocabulary items.
-# source-level: public research (Rumbelow & Watkins, 2023) and follow-on writeups.
-# NOTE: applicability is model/tokenizer-specific and largely historical; kept for coverage/testing.
+# purpose: publicly-known "glitch" / anomalous / under-trained tokens that have been
+#          shown to produce undefined, non-deterministic, or highly atypical behavior
+#          in some tokenizers and models (primarily the GPT-2/3/J family and derivatives).
+# use: regression-test tokenizer robustness, embedding stability, and model handling of
+#      rare vocabulary items. Useful for guardrail evals that care about input stability.
+# source-level: Rumbelow & Watkins (2023) SolidGoldMagikarp series (LessWrong / SERI-MATS),
+#               follow-on archaeology posts, NVIDIA garak glitch probes, and subsequent
+#               public catalogs. Applicability is model- and tokenizer-specific and often
+#               historical; retained for coverage and reproducibility.
+# NOTE: these are defensive test strings only. They are already public; do not treat this
+#       file as a novel exploit source.
+
+# --- Classic centroid / "unspeakable" cluster (Rumbelow & Watkins) ---
 SolidGoldMagikarp
-StreamerBot
+GoldMagikarp
 TheNitrome
+TheNitromeFan
+Nitrome
+StreamerBot
+TPPStreamerBot
 RandomRedditorWithNo
+RandomRedditor
+davidjl
+petertodd
+ertodd
 cloudfront
 externalToEVA
+externalToEVAOnly
 guiActiveUn
-davidjl
-GoldMagikarp
-Smartstocks
+guiActive
+guiActiveUnfocused
+guiName
+guiIcon
 PsyNetMessage
-embedreportprint
-rawdownload
-SpaceEngineers
-DevOnline
+PsyNet
 attRot
 EStreamFrame
+EStream
 ForgeModLoader
+DevOnline
 oreAndOnline
 InstoreAndOnline
 BuyableInstoreAndOnline
+oreAnd
+Smartstocks
+Adinida
+SpaceEngineers
+Dragonbound
+DragonMagazine
+Mechdragon
+Skydragon
+embedreportprint
+cloneembedreportprint
+rawdownload
+rawdownloadcloneembedreportprint
+reportprint
+Downloadha
+srfN
+srfAttach
+largeDownload
+wcsstore
+practition
+strutConnector
+Leilan
+EngineDebug
+ItemThumbnailImage
+ItemTracker
+ThumbnailImage
+quickShip
+quickShipAvailable
+soDeliveryDate
+DeliveryDate
+channelAvailability
+inventoryQuantity
+isSpecialOrderable
+natureconservancy
+assetsadobe
+UCHIJ
+iHUD
+sqor
+istg
+ActionCode
+externalActionCode
+externalTo
+unfocusedRange
+partName
+FactoryReloaded
+MpServer
+ItemLevel
+TextColor
+SetFontSize
+
+# --- Additional frequently cited public glitch / under-trained tokens ---
+Japgolly
+PostalCodesNL
+ForCanBeConverted
+ForCanBeConvertedToF
+ForCanBeConvertedToForeach
+Hexatrigesimal
+clarsimp
+ablytyped
+StreamLazy
+EnumerableStream
+webElementXpaths
+useRalative

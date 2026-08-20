@@ -35,6 +35,48 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-009 · 2026-08-20 · Control chars, bidi overrides & the tokens expansion · Medium · confirmed
+
+**What.** Corpus 0.2.1 expands `tokens/` to 147 entries: the fuller public
+SolidGoldMagikarp catalog plus a new `control-and-artifact.txt` (C0/C1 control
+chars, bidirectional-format overrides, BPE mojibake residue, CJK fragments).
+Two of these are their own defensive classes, not just tokenizer trivia.
+
+**Mechanism.**
+- *Bidi overrides (U+202A–U+202E, U+200E/F).* The **Trojan Source** class
+  (Boucher & Anderson, 2021): RLO/LRO reorder how a line *renders* while the
+  byte order the compiler/model consumes is unchanged — source (or a prompt)
+  reads one way to a human and executes another. Adjacent to F-006: invisible
+  structure, but here it *reorders* visible text rather than hiding it.
+- *C0/C1 control characters.* Rarely appear in natural text; can break naive
+  parsers, terminate strings early, or land as under-trained token IDs.
+- *Under-trained / glitch tokens.* Embedding-space outliers → non-determinism
+  at temp 0, refusal-to-repeat, garbled decoding on models sharing the vocab.
+
+**Defense.**
+1. At ingestion, **reject or strip** bidi-format codepoints (U+202A–E, U+200E/F)
+   and C0/C1 controls except ordinary whitespace — same egress/ingress hygiene
+   as F-006; extend the `invisible.py` scanner's category set to cover them.
+2. Render untrusted text with bidi isolation, or display escaped, so human
+   review sees true order (Trojan Source mitigation).
+3. Treat glitch tokens as an input-stability *test*, not a filter: assert your
+   tokenizer/embeddings handle them without NaNs or nondeterminism.
+
+**Storage note.** Non-printable entries are stored as `\xNN` / `U+NNNN NAME`
+notation, never literal bytes — the file scans clean under F-006 while staying
+greppable. (Caught myself materializing real bidi bytes mid-edit; the naming
+convention is the safe fix.)
+
+**Evidence.** `wordlists/tokens/control-and-artifact.txt`,
+`wordlists/tokens/anomalous-tokens.txt`. Refs: Boucher & Anderson (2021)
+*Trojan Source*; Rumbelow & Watkins SolidGoldMagikarp; NVIDIA garak glitch probes.
+
+**Follow-up.** Extend `examples/invisible.py` to flag bidi overrides + C0/C1
+explicitly (they fall under its Cf/Cc net already, but naming them improves the
+reveal). Logged to backlog.
+
+---
+
 ### F-008 · 2026-08-20 · Corpus 0.2.0 — seven new classes (external contribution) · — · reference
 
 **What.** Contribution from Richard Odero expands the corpus to **0.2.0**
@@ -332,6 +374,8 @@ silent (no error, filter just passes it).
 - [x] **Payload splitting** — catalogued in F-008 (`injection/payload-splitting`).
       Defense: evaluate on assembled context, not per-span. Still open as a
       *measured* experiment (does per-message filtering miss the assembled intent?).
+- [ ] **B-bidi-reveal** — extend `examples/invisible.py` to name bidi overrides
+      (U+202A–E, U+200E/F) and C0/C1 controls explicitly in `reveal`/`scan`. From F-009.
 - [ ] **Tool-call argument injection** — untrusted content steering *the
       arguments* of a legitimate tool call rather than the final text.
 - [ ] **RAG poisoning persistence** — an injected instruction stored in a
