@@ -59,14 +59,11 @@ Each `.txt` is one phrase per line; lines starting with `#` are metadata/comment
 
 ## Quick start
 
-**No install** — the corpus is just text files:
+**pip install** — zero dependencies, standard library only:
 
 ```bash
-git clone https://github.com/parrot-r/wordlist
-cat wordlists/injection/*.txt
+pip install promptwl
 ```
-
-**Python loader** (zero dependencies, standard library only):
 
 ```python
 import promptwl
@@ -77,6 +74,13 @@ promptwl.phrases("multilingual")  # non-English patterns for one category
 promptwl.phrases("agents")     # list[str] for one category
 for e in promptwl.load():      # Entry(text, category, file, title)
     ...
+```
+
+**Or no install** — the corpus is plain text files if you just want to grep:
+
+```bash
+git clone https://github.com/parrot-r/wordlist
+cat wordlists/injection/*.txt
 ```
 
 ## Example: score a guardrail's recall

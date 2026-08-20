@@ -24,9 +24,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator, List, Optional
 
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
-_ROOT = Path(__file__).resolve().parent.parent
+_PKG_DIR = Path(__file__).resolve().parent
+# pip-installed: wordlists/ is bundled next to __init__.py (force-include in pyproject.toml)
+# git clone:     wordlists/ lives at the repo root (parent of the package dir)
+_ROOT = _PKG_DIR if (_PKG_DIR / "wordlists").exists() else _PKG_DIR.parent
 _MANIFEST = _ROOT / "manifest.json"
 
 

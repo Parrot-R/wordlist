@@ -1,6 +1,6 @@
 {
   "name": "promptwl",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
   "license": "MIT",
   "intent": "defensive",

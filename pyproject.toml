@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "promptwl"
+version = "0.3.1"
+description = "A red-team & guardrail wordlist for LLMs. SecLists, but for language models."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+keywords = [
+    "llm", "security", "red-team", "guardrail",
+    "prompt-injection", "jailbreak", "wordlist", "eval",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.urls]
+Homepage = "https://github.com/parrot-r/wordlist"
+"Bug Tracker" = "https://github.com/parrot-r/wordlist/issues"
+Changelog = "https://github.com/parrot-r/wordlist/blob/main/CHANGELOG.md"
+
+# ── Wheel: bundle wordlists/ and manifest.json alongside the package ──────────
+# force-include copies top-level corpus files into the installed package so
+# promptwl works identically whether run from a git clone or pip install.
+[tool.hatch.build.targets.wheel]
+packages = ["promptwl"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"wordlists"   = "promptwl/wordlists"
+"manifest.json" = "promptwl/manifest.json"
+
+# ── Sdist: include everything a developer needs ───────────────────────────────
+[tool.hatch.build.targets.sdist]
+include = [
+    "promptwl/",
+    "wordlists/",
+    "manifest.json",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "examples/",
+    "scripts/",
+]

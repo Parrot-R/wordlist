@@ -5,6 +5,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.3.2] — 2026-08-20
+
+### Added
+- `pyproject.toml` — `pip install promptwl` now works. Uses hatchling;
+  bundles `wordlists/` and `manifest.json` into the wheel via `force-include`
+  so the package is fully self-contained after install.
+- CI: added `package` job — builds the wheel and smoke-tests the installed
+  package from `/tmp` (isolated from the repo) on every push/PR.
+
+### Changed
+- `promptwl/__init__.py`: `_ROOT` now detects whether it is running from a
+  pip install (wordlists bundled next to `__init__.py`) or a git clone
+  (wordlists at repo root). Both paths work transparently.
+- `README.md`: `pip install promptwl` is now the primary quick-start; git
+  clone retained as the "no install" alternative.
+
+---
+
 ## [0.3.1] — 2026-08-20
 
 ### Added

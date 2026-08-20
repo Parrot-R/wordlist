@@ -22,3 +22,27 @@ jobs:
         run: python3 examples/invisible_demo.py
       - name: Run cross-tokenizer probe (stdlib path, smoke test)
         run: python3 examples/tokenizer_probe.py
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build tools
+        run: pip install hatchling build
+      - name: Build wheel
+        run: python3 -m build --wheel --outdir dist/
+      - name: Smoke-test installed wheel (isolated from repo)
+        run: |
+          pip install dist/promptwl-*.whl
+          cd /tmp
+          python3 -c "
+          import promptwl
+          s = promptwl.stats()
+          assert s['total'] > 0, 'corpus empty after pip install'
+          assert 'injection' in promptwl.categories()
+          assert len(promptwl.phrases('injection')) > 0
+          print(f'pip-install OK: {s[\"total\"]} phrases, {len(promptwl.categories())} categories')
+          "
