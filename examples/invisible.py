@@ -42,6 +42,23 @@ INVISIBLE = {
 # Unicode Tags block — the invisible ASCII mirror.
 TAGS_LO, TAGS_HI = 0xE0000, 0xE007F
 
+# Bidirectional formatting / override controls (Trojan Source class, F-009).
+# These reorder how text *renders* without changing the stored byte order.
+BIDI = {
+    0x202A: "LEFT-TO-RIGHT EMBEDDING",
+    0x202B: "RIGHT-TO-LEFT EMBEDDING",
+    0x202C: "POP DIRECTIONAL FORMATTING",
+    0x202D: "LEFT-TO-RIGHT OVERRIDE",
+    0x202E: "RIGHT-TO-LEFT OVERRIDE",
+    0x2066: "LEFT-TO-RIGHT ISOLATE",
+    0x2067: "RIGHT-TO-LEFT ISOLATE",
+    0x2068: "FIRST STRONG ISOLATE",
+    0x2069: "POP DIRECTIONAL ISOLATE",
+    0x200E: "LEFT-TO-RIGHT MARK",
+    0x200F: "RIGHT-TO-LEFT MARK",
+    0x061C: "ARABIC LETTER MARK",
+}
+
 
 @dataclass(frozen=True)
 class Finding:
@@ -54,6 +71,8 @@ class Finding:
 
 
 def _classify(cp: int) -> str | None:
+    if cp in BIDI:
+        return f"BIDI: {BIDI[cp]}"
     if cp in INVISIBLE:
         return INVISIBLE[cp]
     if TAGS_LO <= cp <= TAGS_HI:
@@ -64,7 +83,8 @@ def _classify(cp: int) -> str | None:
         try:
             return unicodedata.name(ch)
         except ValueError:
-            return "NON-PRINTING CONTROL/FORMAT"
+            band = "C0" if cp < 0x20 else "C1"
+            return f"{band} CONTROL U+{cp:04X}"
     return None
 
 
@@ -97,6 +117,18 @@ def reveal_tags(text: str) -> str:
         for ch in text
         if TAGS_LO + 0x20 <= ord(ch) <= TAGS_LO + 0x7E
     )
+
+
+def reveal_bidi(text: str) -> tuple[List[str], str]:
+    """Report bidi controls present and the logical (stored) order.
+
+    Returns (control_names, logical_text). Bidi overrides reorder how a string
+    *renders*; stripping them shows the true byte order a compiler/model sees —
+    the Trojan Source reveal.
+    """
+    controls = [BIDI[ord(c)] for c in text if ord(c) in BIDI]
+    logical = "".join(c for c in text if ord(c) not in BIDI)
+    return controls, logical
 
 
 def reveal_zero_width_bits(text: str, zero: int = 0x200B, one: int = 0x200C) -> str:

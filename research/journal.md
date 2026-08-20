@@ -374,8 +374,9 @@ silent (no error, filter just passes it).
 - [x] **Payload splitting** — catalogued in F-008 (`injection/payload-splitting`).
       Defense: evaluate on assembled context, not per-span. Still open as a
       *measured* experiment (does per-message filtering miss the assembled intent?).
-- [ ] **B-bidi-reveal** — extend `examples/invisible.py` to name bidi overrides
-      (U+202A–E, U+200E/F) and C0/C1 controls explicitly in `reveal`/`scan`. From F-009.
+- [x] **B-bidi-reveal** — DONE. `invisible.py` now names bidi overrides
+      (`BIDI` table) and C0/C1 controls explicitly, adds `reveal_bidi()` (returns
+      controls + logical order), and the demo gained a Trojan Source section [3]. From F-009.
 - [ ] **Tool-call argument injection** — untrusted content steering *the
       arguments* of a legitimate tool call rather than the final text.
 - [ ] **RAG poisoning persistence** — an injected instruction stored in a

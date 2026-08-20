@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from examples.invisible import (  # noqa: E402
-    encode_tags, encode_zero_width_bits, is_clean, reveal_tags,
+    encode_tags, encode_zero_width_bits, is_clean, reveal_bidi, reveal_tags,
     reveal_zero_width_bits, sanitize, scan,
 )
 
@@ -57,6 +57,20 @@ def main() -> int:
     print(f"  reveal bits       : {reveal_zero_width_bits(zw)!r}")
     z_clean, z_removed = sanitize(zw)
     print(f"  sanitize()        : {z_clean!r}  (stripped {z_removed})")
+
+    # --- 3. Bidi override (Trojan Source) ----------------------------------
+    # Built at runtime via chr() so this source file stays ASCII-clean.
+    RLO, PDF = chr(0x202E), chr(0x202C)
+    bidi = "invoice_2024" + RLO + "cod.exe" + PDF          # renders reversed tail
+    controls, logical = reveal_bidi(bidi)
+
+    print("\n[3] Bidirectional override (U+202E, Trojan Source)")
+    print(f"  stored bytes      : {bidi!r}")
+    print(f"  scanner           : {len(scan(bidi))} bidi/format codepoints flagged")
+    print(f"  reveal_bidi()     : controls={controls}")
+    print(f"                      logical order={logical!r}  <- what the machine reads")
+    b_clean, b_removed = sanitize(bidi)
+    print(f"  sanitize()        : {b_clean!r}  (stripped {b_removed})")
 
     # --- the point ---------------------------------------------------------
     print("\n" + "=" * 66)
