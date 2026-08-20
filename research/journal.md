@@ -35,6 +35,34 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-007 · 2026-08-20 · Confusable-folding closes the homoglyph residual · Medium · confirmed
+
+**Observation.** Adding a UTS-39-style **confusable-fold** (cross-script
+look-alike → ASCII skeleton) to the decode/normalize pre-pass moves the
+Cyrillic-homoglyph attack from **0% → 55%** recovered in the F-005 scoreboard,
+matching the baseline. The `caesar7` row stays at **0%** — deliberately, as the
+standing proof that enumerate-and-invert can't cover the un-enumerated.
+
+**Mechanism.** NFKC normalizes compatibility forms (fullwidth, ligatures) but
+does **not** fold characters from different scripts — Cyrillic `а` (U+0430) and
+Latin `a` (U+0061) are distinct and both "correct", so NFKC leaves them apart.
+A confusable map collapses them to one skeleton before matching, exactly as
+Unicode UTS-39 (`confusables.txt`) prescribes.
+
+**Defense.** Canonicalize in this order before any filter: iterative decode →
+NFKC → strip format/zero-width (F-006) → confusable-fold → semantic classifier
+for the rest. The fold here is a curated subset; production should load the
+full UTS-39 table.
+
+**Caveat.** Confusable-folding is for *detection/matching*, not for rewriting
+user-visible content — folding display text breaks legitimate non-Latin input.
+Fold a copy, match on it, keep the original.
+
+**Evidence.** `examples/string_transforms.py` (`confusable_fold`),
+`examples/ensemble_demo.py` (homoglyph row now 55%). Closes the F-005 residual.
+
+---
+
 ### F-006 · 2026-08-20 · ASCII smuggling / invisible prompt injection · High · confirmed
 
 **Observation.** A message can travel as *invisible structure* rather than
@@ -253,9 +281,10 @@ silent (no error, filter just passes it).
 ## Backlog — to investigate
 
 - [x] **B-string-ensemble** — DONE → **F-005**. Encodings drop the filter to 0%;
-      decode+normalize recovers known transforms fully, leaves Caesar-7 and
-      homoglyphs as residual. Next: implement the confusable-folding layer (2)
-      and re-measure the homoglyph row.
+      decode+normalize recovers known transforms fully.
+- [x] **B-confusable-fold** — DONE → **F-007**. Confusable-folding lifts the
+      homoglyph row 0% → 55%; caesar7 stays 0% as the standing semantic-layer
+      residual.
 - [ ] **B-persona-translation** — **Cross-lingual jailbreak transfer**: do persona
       "liberation" jailbreaks survive translation as well as plain injection does?
       (Hypothesis: yes, and low-resource languages fare worse for the defender.)

@@ -56,13 +56,14 @@ def main() -> int:
     print("\n" + "=" * 64)
     print("Reading it:")
     print("  • naive column ~0% — every encoding defeats the keyword filter.")
-    print("  • KNOWN encodings recover to the full baseline: an iterative decode")
-    print("    + NFKC-normalize pre-pass fully undoes transforms it enumerates.")
-    print("  • the '(unknown)' rows stay near 0% — a Caesar-7 shift (defense only")
-    print("    knows ROT13) and Cyrillic homoglyphs (survive NFKC) are the residual.")
-    print("\nLesson: decode+normalize is necessary but enumerate-and-invert only")
-    print("covers what you list. Add Unicode-confusable folding, and a SEMANTIC")
-    print("layer for everything you didn't anticipate. Defense in depth. 🦜\n")
+    print("  • KNOWN transforms recover to the full baseline: iterative decode +")
+    print("    NFKC-normalize + confusable-fold undoes everything it enumerates —")
+    print("    including Cyrillic homoglyphs (F-007 closed that residual).")
+    print("  • caesar7 stays 0%: a shift the defense never listed. You cannot")
+    print("    invert what you didn't anticipate — that's the residual.")
+    print("\nLesson: decode+normalize+confusable-fold is necessary but enumerate-")
+    print("and-invert only covers what you list. Keep a SEMANTIC layer for the")
+    print("transforms you never saw coming. Defense in depth. 🦜\n")
     return 0
 
 

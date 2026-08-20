@@ -82,8 +82,10 @@ def to_homoglyph(s: str) -> str:
 
 
 # Named attacks: single transforms and chained compositions. Each value is an
-# ordered list applied left-to-right. The last two are deliberately outside
-# the defense's known inverse set, to expose the residual blind spot.
+# ordered list applied left-to-right. `caesar7` is deliberately outside the
+# defense's known inverse set, to expose the residual blind spot that only a
+# semantic layer can reach. `homoglyph` was that residual until F-007 added
+# confusable-folding — kept here as the regression that proves the fix.
 ATTACKS: Dict[str, List[Callable[[str], str]]] = {
     "leet": [to_leet],
     "base64": [to_base64],
@@ -91,8 +93,8 @@ ATTACKS: Dict[str, List[Callable[[str], str]]] = {
     "reverse": [to_reverse],
     "leet+base64": [to_leet, to_base64],
     "reverse+rot13": [to_reverse, to_rot13],
+    "homoglyph": [to_homoglyph],
     "caesar7 (unknown)": [to_caesar7],
-    "homoglyph (unknown)": [to_homoglyph],
 }
 
 
@@ -112,10 +114,30 @@ def _unleet(s: str) -> str:
     return "".join(_LEET_BACK.get(c, c) for c in s)
 
 
+# Curated cross-script confusable -> ASCII map (a practical subset of the
+# Unicode UTS-39 "confusables" set). NFKC does NOT fold these — Cyrillic/Greek
+# look-alikes live in separate scripts — so we handle them explicitly.
+_CONFUSABLE = {
+    # Cyrillic
+    "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "у": "y", "х": "x",
+    "і": "i", "ј": "j", "ѕ": "s", "к": "k", "н": "h", "в": "b", "м": "m",
+    "т": "t", "ѐ": "e", "ԁ": "d", "ց": "g", "ո": "n",
+    # Greek
+    "α": "a", "ο": "o", "ρ": "p", "ε": "e", "τ": "t", "ν": "v", "υ": "u",
+    "κ": "k", "ι": "i", "χ": "x", "β": "b",
+}
+
+
+def confusable_fold(s: str) -> str:
+    """Map cross-script confusable letters back to their ASCII skeleton."""
+    return "".join(_CONFUSABLE.get(c, c) for c in s)
+
+
 def _normalize(s: str) -> str:
     s = unicodedata.normalize("NFKC", s)
     s = "".join(c for c in s if unicodedata.category(c) != "Cf")  # zero-width
-    return re.sub(r"\s+", " ", s).strip().lower()
+    s = confusable_fold(s.lower())
+    return re.sub(r"\s+", " ", s).strip()
 
 
 def _try_b64(s: str) -> str | None:
