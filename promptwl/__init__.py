@@ -24,7 +24,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator, List, Optional
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 _ROOT = Path(__file__).resolve().parent.parent
 _MANIFEST = _ROOT / "manifest.json"

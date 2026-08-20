@@ -72,7 +72,7 @@ cat wordlists/injection/*.txt
 import promptwl
 
 promptwl.categories()          # ['injection', 'jailbreak', 'extraction', ...]
-promptwl.stats()               # {'injection': 57, ..., 'total': 539}
+promptwl.stats()               # {'injection': 57, ..., 'total': 694}
 promptwl.phrases("multilingual")  # non-English patterns for one category
 promptwl.phrases("agents")     # list[str] for one category
 for e in promptwl.load():      # Entry(text, category, file, title)
@@ -131,9 +131,20 @@ python3 examples/invisible_demo.py
 
 A `"lgtm, minor cleanup"` commit message that carries 28 invisible codepoints decoding to a hidden instruction — `grep` finds nothing, the scanner flags all 28, reveals the text, and strips it. Sanitize on **ingestion and egress**: the footprint channel (payloads smuggled into an agent's own commits/comments) is the half most pipelines forget.
 
-## The token-anomaly corpus (complementary to garak)
+## The token-anomaly corpus (broader than garak)
 
-`tokens/` doesn't just list scary Unicode — it answers **"what happens to this string at the tokenizer level?"** The cross-tokenizer probe fragments each base word (split points, punctuation, combining marks, zero-width chars, exotic separators) and records how each tokenizer segments it. Zero-dependency by default; `tiktoken` / `transformers` adapters auto-activate if installed.
+`tokens/` goes well beyond a list of scary Unicode. It covers six distinct surfaces, each tested with its own probe or corpus:
+
+| File | What it tests |
+|---|---|
+| `anomalous-tokens.txt` | 141 publicly-known glitch / under-trained tokens across GPT, Llama, Mistral, and open families |
+| `control-and-artifact.txt` | C0/C1 control chars, bidi overrides (Trojan Source), BPE residue strings |
+| `unicode-confusables.txt` | UTS-39 confusable pair table + confusable-substituted attack keywords (Cyrillic, Greek, fullwidth Latin) |
+| `encoding-chains.txt` | Tier 1–4 encoding chain catalog — from single base64 to multi-layer chains with unknown-shift residuals |
+| `fragmentation/base-words.txt` | Seed words the cross-tokenizer probe fragments to measure boundary-shift |
+| `boundary/separators.txt` | 26 real, exotic, and invisible separator codepoints that shift apparent token boundaries |
+
+The cross-tokenizer probe answers **"what happens to this string at the tokenizer level?"** — where does each tokenizer place a boundary, and how does an invisible insertion change the split? Zero-dependency by default; `tiktoken` / `transformers` adapters auto-activate if installed.
 
 ```bash
 python3 examples/tokenizer_probe.py
@@ -147,7 +158,7 @@ plain                    8            8            8            1            1
 +combining              10*           9*           8            2*           2*   ← mark rides the grapheme (grapheme count unchanged)
 ```
 
-An invisible zero-width space a reviewer can't see turns a **1-token** word into **3 tokens** — the tokenizer places a boundary the human never sees. That's the anomaly to defend against: **normalize and strip boundary/zero-width characters *before* you tokenize or filter.** This is the data garak's filter-side `badchars` probe doesn't give you.
+An invisible zero-width space a reviewer can't see turns a **1-token** word into **3 tokens**. A Cyrillic lookalike for `a` (U+0430) fools ASCII-only filters — apply UTS-39 confusable-fold before matching. A two-layer `leet+base64` chain defeats keyword filters that only look one level deep. These are the gaps garak's filter-side `badchars` probe doesn't measure — normalize before you tokenize *and* before you filter.
 
 ## Scope & ethics
 
@@ -180,3 +191,5 @@ character in [`MASCOT.md`](MASCOT.md).
 - [SecLists](https://github.com/danielmiessler/SecLists) — the inspiration for the format
 - [garak](https://github.com/NVIDIA/garak) — LLM vulnerability scanner
 - Rumbelow & Watkins (2023), *SolidGoldMagikarp* — anomalous tokens
+- Levi et al. (2024), arXiv:2411.01084 — string-composition attacks on LLM filters
+- Unicode Consortium, [UTS-39](https://unicode.org/reports/tr39/) — confusable character detection
