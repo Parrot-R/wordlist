@@ -35,6 +35,37 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-005 · 2026-08-20 · String-composition attacks vs. a decode-defense · High · confirmed
+
+**Observation.** Obfuscating the 99 English injection/jailbreak/extraction
+phrases drops the naive keyword filter from **55% → 0%** for *every* encoding
+tried (leetspeak, Base64, ROT13, reversal, and chains). A decode + NFKC-
+normalize pre-pass **fully recovers to 55%** for the transforms it enumerates —
+but stays at **0%** for a Caesar-7 shift (it only knows ROT13) and for Cyrillic
+homoglyphs (visually identical, not folded by NFKC). Tests the F-004 /
+arXiv:2411.01084 mechanism against a concrete defense.
+
+**Mechanism.** Reversible transforms preserve intent while destroying the
+surface tokens a lexical filter matches. A defense built by *enumerating and
+inverting* known encodings only covers what's on the list; NFKC does not fold
+cross-script confusables, and an arbitrary Caesar shift is not ROT13.
+
+**Defense (layered — no single one suffices).**
+1. Iterative decode + Unicode-normalize (NFKC, strip zero-width, collapse
+   spacing) as a pre-pass, re-scanning every intermediate form. *Necessary,
+   fully closes known encodings.*
+2. **Unicode confusable folding** (map to a skeleton, e.g. UTS-39) to close the
+   homoglyph residual NFKC leaves open.
+3. A **semantic / model-based** classifier for transforms you never enumerated
+   (the Caesar-7 case) — you cannot invert what you didn't anticipate.
+4. Defense in depth: assume some obfuscation reaches the model; add output-side
+   checks too.
+
+**Evidence.** `examples/ensemble_demo.py`, `examples/string_transforms.py`.
+Closes backlog **B-string-ensemble**.
+
+---
+
 ### F-004 · 2026-08-20 · Technique survey: Pliny the Liberator (Elder Plinius) · — · reference
 
 **Who.** *Pliny the Liberator* / *Elder Plinius* (`@elder_plinius`,
@@ -175,9 +206,10 @@ silent (no error, filter just passes it).
 
 ## Backlog — to investigate
 
-- [ ] **B-string-ensemble** — measure how a chained/ensembled string-composition
-      attack (leetspeak → translate → morse …) fares against the F-002 defense
-      (iterative decode + NFKC + semantic classifier). From F-004 / arXiv:2411.01084.
+- [x] **B-string-ensemble** — DONE → **F-005**. Encodings drop the filter to 0%;
+      decode+normalize recovers known transforms fully, leaves Caesar-7 and
+      homoglyphs as residual. Next: implement the confusable-folding layer (2)
+      and re-measure the homoglyph row.
 - [ ] **B-persona-translation** — **Cross-lingual jailbreak transfer**: do persona
       "liberation" jailbreaks survive translation as well as plain injection does?
       (Hypothesis: yes, and low-resource languages fare worse for the defender.)

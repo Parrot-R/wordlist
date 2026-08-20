@@ -114,6 +114,14 @@ The same, translated           0%   ······················
 
 The same filter also scores **0%** on encoding evasion, indirect/agent injection, and glitch tokens — it can only see the English phrasings it was written for. That's the whole point: **you can't fix what you don't measure.** Wire promptwl into CI and watch the number.
 
+A second demo pits **string-composition obfuscation against a decode/normalize defense**:
+
+```bash
+python3 examples/ensemble_demo.py
+```
+
+Encodings (leetspeak, Base64, ROT13, reversal, chains) drop the filter to 0%; an iterative decode + Unicode-normalize pre-pass fully recovers the *known* transforms — while a Caesar-7 shift and Cyrillic homoglyphs stay at 0%, showing exactly where enumerate-and-invert ends and semantic defense has to start.
+
 ## Scope & ethics
 
 This is a **defensive** project. It catalogs *patterns that are already publicly documented* (OWASP LLM Top 10, published red-team research, open-source tools like garak and Giskard) and organizes them so defenders can build and test filters, guardrails, and evals.
