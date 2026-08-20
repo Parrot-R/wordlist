@@ -1,6 +1,6 @@
 {
   "name": "promptwl",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A red-team and guardrail wordlist for LLMs. SecLists, but for language models.",
   "license": "MIT",
   "intent": "defensive",
@@ -154,6 +154,16 @@
           "path": "wordlists/tokens/control-and-artifact.txt",
           "title": "Control characters & encoding artifacts",
           "description": "Control characters, zero-width/bidi, and BPE residue strings known to trigger anomalous model behavior."
+        },
+        {
+          "path": "wordlists/tokens/fragmentation/base-words.txt",
+          "title": "Fragmentation base words",
+          "description": "Seed words the cross-tokenizer probe fragments to measure how tokenizers segment the variants."
+        },
+        {
+          "path": "wordlists/tokens/boundary/separators.txt",
+          "title": "Boundary separators",
+          "description": "Real, exotic, and invisible separator codepoints that shift apparent token boundaries."
         }
       ]
     }

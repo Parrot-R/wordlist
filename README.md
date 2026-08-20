@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
-  <img alt="phrases" src="https://img.shields.io/badge/phrases-490%2B-e4572e">
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-530%2B-e4572e">
   <img alt="languages" src="https://img.shields.io/badge/languages-11-845d41">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">
@@ -27,7 +27,7 @@ Every pentester `git clone`s [SecLists](https://github.com/danielmiessler/SecLis
 ```python
 import promptwl
 
-for entry in promptwl.load():                 # 490+ phrases, with metadata
+for entry in promptwl.load():                 # 530+ phrases, with metadata
     verdict = my_guardrail(entry.text)        # your classifier under test
     assert verdict == "block", f"missed: {entry.text!r} ({entry.category})"
 ```
@@ -72,7 +72,7 @@ cat wordlists/injection/*.txt
 import promptwl
 
 promptwl.categories()          # ['injection', 'jailbreak', 'extraction', ...]
-promptwl.stats()               # {'injection': 57, ..., 'total': 498}
+promptwl.stats()               # {'injection': 57, ..., 'total': 539}
 promptwl.phrases("multilingual")  # non-English patterns for one category
 promptwl.phrases("agents")     # list[str] for one category
 for e in promptwl.load():      # Entry(text, category, file, title)
@@ -130,6 +130,24 @@ python3 examples/invisible_demo.py
 ```
 
 A `"lgtm, minor cleanup"` commit message that carries 28 invisible codepoints decoding to a hidden instruction — `grep` finds nothing, the scanner flags all 28, reveals the text, and strips it. Sanitize on **ingestion and egress**: the footprint channel (payloads smuggled into an agent's own commits/comments) is the half most pipelines forget.
+
+## The token-anomaly corpus (complementary to garak)
+
+`tokens/` doesn't just list scary Unicode — it answers **"what happens to this string at the tokenizer level?"** The cross-tokenizer probe fragments each base word (split points, punctuation, combining marks, zero-width chars, exotic separators) and records how each tokenizer segments it. Zero-dependency by default; `tiktoken` / `transformers` adapters auto-activate if installed.
+
+```bash
+python3 examples/tokenizer_probe.py
+```
+
+```
+base word: 'password'
+variant          utf8-bytes   codepoints    graphemes  cl100k_base   o200k_base
+plain                    8            8            8            1            1
++zero_width             11*           9*           9*           3*           3*   ← invisible → 1 token becomes 3
++combining              10*           9*           8            2*           2*   ← mark rides the grapheme (grapheme count unchanged)
+```
+
+An invisible zero-width space a reviewer can't see turns a **1-token** word into **3 tokens** — the tokenizer places a boundary the human never sees. That's the anomaly to defend against: **normalize and strip boundary/zero-width characters *before* you tokenize or filter.** This is the data garak's filter-side `badchars` probe doesn't give you.
 
 ## Scope & ethics
 

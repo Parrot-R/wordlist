@@ -1,0 +1,24 @@
+# category: tokens / fragmentation (base words)
+# purpose: seed words that the tokenizer probe fragments in every documented way
+#          (split points, inserted punctuation / combining marks / zero-width chars /
+#          Unicode separators) to measure how different tokenizers segment the variants.
+# use: feed to examples/tokenizer_probe.py, which GENERATES the variants at runtime
+#      (so no literal invisible bytes are stored here) and records the splits.
+# source-level: methodology inspired by NVIDIA garak glitch/badchars probes; the
+#      cross-tokenizer *measurement* is the value-add, not the word list itself.
+# NOTE: security-flavored seeds so results tie back to the rest of the corpus.
+password
+ignore
+system
+admin
+instructions
+override
+secret
+execute
+delete
+bypass
+token
+prompt
+disable
+previous
+assistant

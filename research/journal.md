@@ -35,6 +35,49 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-010 · 2026-08-20 · Token-anomaly corpus & cross-tokenizer probe · High · confirmed
+
+**Thesis.** A Unicode-attack list is only half the story and duplicates garak's
+`badchars` probe. The differentiator is measuring **what happens at the
+tokenizer level** — so `tokens/` gains `fragmentation/` (base words) and
+`boundary/` (separator codepoints), plus a probe that segments each variant
+across tokenizers. Complementary to garak (filter-side), not a clone.
+
+**Measured (tiktoken cl100k_base & o200k_base).**
+- `"password"` = **1 token**. Insert an invisible **zero-width space** →
+  **3 tokens**. The tokenizer places a boundary the reviewer cannot see.
+- A **combining mark** raises codepoint/byte counts but *not* the grapheme
+  count (it rides the base char) — yet still splits the word into 2 tokens.
+- Every split point and exotic separator (NBSP, thin space, …) changes the
+  segmentation vs. the clean word.
+
+**Why it matters.** Guardrails and classifiers usually run on raw input, then
+the model tokenizes something *different*. If the filter sees `password` (1
+unit) but the tokenizer sees `pass | <ZWSP> | word` (3), a blocklist keyed on the
+whole word never fires — the invisible char created a boundary mid-word.
+
+**Defense.** Canonicalize on the **same view the model will tokenize**:
+normalize (NFKC) + strip boundary/zero-width/format chars (F-006/F-007/F-009)
+*before* both filtering and tokenizing, so filter-input and tokenizer-input
+agree. Test with the probe across the tokenizers you actually deploy.
+
+**Design notes.** Zero-dependency core (stdlib byte/codepoint/grapheme
+analyzers always run); `tiktoken`/`transformers` adapters auto-activate only if
+importable, preserving the repo's install-free promise. Variants are generated
+at runtime and boundary chars stored as `U+NNNN NAME`, so no invisible bytes
+touch disk — tree scans clean under F-006.
+
+**Evidence.** `examples/tokenizer_probe.py`,
+`wordlists/tokens/fragmentation/base-words.txt`,
+`wordlists/tokens/boundary/separators.txt`. Method inspired by NVIDIA garak
+glitch/badchars probes; the cross-tokenizer measurement is the value-add.
+
+**Backlog (deferred by decision).** `unicode/`, `encoding/`, `glitch/`
+subcategory reorg + a `subcategory` manifest field — not done this pass; the
+fragmentation/boundary probe was the higher-signal first step.
+
+---
+
 ### F-009 · 2026-08-20 · Control chars, bidi overrides & the tokens expansion · Medium · confirmed
 
 **What.** Corpus 0.2.1 expands `tokens/` to 147 entries: the fuller public

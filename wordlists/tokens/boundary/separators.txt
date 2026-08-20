@@ -1,0 +1,36 @@
+# category: tokens / boundary (separator characters)
+# purpose: characters that affect *apparent* word/token boundaries — real spaces,
+#          exotic Unicode spaces, and invisible would-be separators. A human reads a
+#          boundary (or none); a tokenizer may segment somewhere else entirely.
+# use: feed to examples/tokenizer_probe.py, which inserts each of these into base
+#      words and records where each tokenizer splits. Answers "does NBSP tokenize
+#      like a space? does a zero-width space create a boundary that isn't visible?".
+# source-level: Unicode space/format categories (Zs, Cf) + garak badchars methodology.
+# NOTE: written as "U+NNNN NAME" (pure ASCII), never literal bytes — the probe
+#       materializes the character with chr() at runtime, keeping the tree scan-clean.
+U+0020 SPACE
+U+0009 CHARACTER TABULATION (TAB)
+U+000A LINE FEED (NEWLINE)
+U+000D CARRIAGE RETURN
+U+00A0 NO-BREAK SPACE
+U+1680 OGHAM SPACE MARK
+U+2000 EN QUAD
+U+2001 EM QUAD
+U+2002 EN SPACE
+U+2003 EM SPACE
+U+2004 THREE-PER-EM SPACE
+U+2005 FOUR-PER-EM SPACE
+U+2006 SIX-PER-EM SPACE
+U+2007 FIGURE SPACE
+U+2008 PUNCTUATION SPACE
+U+2009 THIN SPACE
+U+200A HAIR SPACE
+U+202F NARROW NO-BREAK SPACE
+U+205F MEDIUM MATHEMATICAL SPACE
+U+3000 IDEOGRAPHIC SPACE
+U+200B ZERO WIDTH SPACE
+U+2060 WORD JOINER
+U+00AD SOFT HYPHEN
+U+200E LEFT-TO-RIGHT MARK
+U+200F RIGHT-TO-LEFT MARK
+U+FEFF ZERO WIDTH NO-BREAK SPACE (BOM)
