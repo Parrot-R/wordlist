@@ -5,6 +5,7 @@ Exits non-zero (failing CI) if any manifest file is missing, empty, or if the
 loader raises. Prints a per-category summary on success.
 """
 
+import json
 import sys
 from pathlib import Path
 
@@ -17,6 +18,17 @@ import promptwl  # noqa: E402
 def main() -> int:
     errors = []
     m = promptwl.manifest()
+
+    # Version single-source guard: the raw on-disk manifest.json must match
+    # promptwl.__version__ (the one source of truth). manifest() overrides the
+    # field at load time, so this reads the file directly to catch static drift.
+    raw = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
+    if raw.get("version") != promptwl.__version__:
+        errors.append(
+            f"manifest.json version {raw.get('version')!r} != "
+            f"promptwl.__version__ {promptwl.__version__!r} "
+            f"(update manifest.json to match)"
+        )
 
     for cat in m["categories"]:
         for f in cat["files"]:

@@ -44,8 +44,14 @@ class Entry:
 
 
 def manifest() -> dict:
-    """Return the parsed ``manifest.json``."""
-    return json.loads(_MANIFEST.read_text(encoding="utf-8"))
+    """Return the parsed ``manifest.json``.
+
+    The ``version`` field is always set from :data:`__version__` (the single
+    source of truth), so the API never reports a stale on-disk value.
+    """
+    m = json.loads(_MANIFEST.read_text(encoding="utf-8"))
+    m["version"] = __version__
+    return m
 
 
 def _read_lines(path: Path) -> List[str]:
