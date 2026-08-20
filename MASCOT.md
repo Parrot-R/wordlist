@@ -56,6 +56,7 @@ are produced. The journal follows a strict format:
 | 0.2.1 | ~410 | Bidi/Trojan Source, fuller glitch catalog |
 | 0.3.0 | 539 | Token-anomaly corpus: fragmentation + boundary probes |
 | 0.3.1 | 694 | Unicode confusables, encoding chains, expanded glitch list |
+| 0.3.2 | 694 | PyPI packaging — `pip install promptwl` |
 
 ## License
 

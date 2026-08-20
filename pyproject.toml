@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "promptwl"
-version = "0.3.1"
+dynamic = ["version"]
 description = "A red-team & guardrail wordlist for LLMs. SecLists, but for language models."
 readme = "README.md"
 license = {text = "MIT"}
@@ -31,6 +31,10 @@ classifiers = [
 Homepage = "https://github.com/parrot-r/wordlist"
 "Bug Tracker" = "https://github.com/parrot-r/wordlist/issues"
 Changelog = "https://github.com/parrot-r/wordlist/blob/main/CHANGELOG.md"
+
+# Single source of truth for the version: promptwl/__init__.py::__version__
+[tool.hatch.version]
+path = "promptwl/__init__.py"
 
 # ── Wheel: bundle wordlists/ and manifest.json alongside the package ──────────
 # force-include copies top-level corpus files into the installed package so
