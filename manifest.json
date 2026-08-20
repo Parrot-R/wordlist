@@ -61,6 +61,11 @@
           "path": "wordlists/evasion/encoding-obfuscation.txt",
           "title": "Encoding & obfuscation",
           "description": "Cues that a payload is smuggled via encoding, homoglyphs, or spacing."
+        },
+        {
+          "path": "wordlists/evasion/invisible-characters.txt",
+          "title": "Invisible characters",
+          "description": "Zero-width and Unicode Tags codepoints used for ASCII smuggling."
         }
       ]
     },

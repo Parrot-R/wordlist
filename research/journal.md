@@ -35,6 +35,52 @@ Newest entries on top. Format: `ID · date · title · severity · status`.
 
 ## Findings
 
+### F-006 · 2026-08-20 · ASCII smuggling / invisible prompt injection · High · confirmed
+
+**Observation.** A message can travel as *invisible structure* rather than
+visible text, rendering as nothing yet remaining fully decodable. Two vehicles:
+zero-width characters (ZWSP U+200B, ZWNJ U+200C, ZWJ U+200D, WORD JOINER
+U+2060, ZWNBSP/BOM U+FEFF, SOFT HYPHEN U+00AD) used as a **bit alphabet** over
+the payload's UTF-8 bits; and the **Unicode Tags block** (U+E0000–U+E007F), a
+near-1:1 invisible mirror of ASCII. `grep "admin"` returns zero hits — the
+message is present as codepoints, not letters. Demo: a `"lgtm, minor cleanup"`
+commit carrying 28 invisible Tag codepoints that decode to a hidden
+instruction; `"ok"` carrying 96 zero-width bits that decode to a second string.
+
+**Mechanism.**
+- *Invisible prompt injection.* An agent that ingests the raw bytes gets those
+  codepoints in its context; if the model attends to them as content, it acts
+  on text no human reviewer can see — the diff looks clean.
+- *The two-location footprint.* The agent can re-emit an invisible payload into
+  its own trace (commit message, PR comment, log). One payload lives in the
+  ingested `.md`; a second in the emitted footprint. The joined sentence never
+  exists as a string anywhere — you assemble it only by decoding both blobs.
+  Encoding is not plaintext concatenation; each blob stands alone, which is why
+  full-text search over any single artifact finds nothing.
+
+**Defense (both directions — egress matters as much as ingress).**
+1. **Ingestion:** scan every untrusted file/message for zero-width + Tags +
+   other Cf/Cc format codepoints; strip or reject before the text reaches the
+   model. Never let invisible codepoints into context.
+2. **Egress:** sanitize everything the agent emits (commits, PR comments, tool
+   args, logs). This closes the footprint/exfiltration channel — the half most
+   pipelines forget.
+3. **Review:** surface a decode of any hidden content (`reveal_tags`,
+   `reveal_zero_width_bits`) so a human sees what was smuggled.
+4. **Allowlist scripts/ranges** you actually expect; treat Plane-14 tags and
+   stray format chars as hostile by default.
+
+**Evidence.** `examples/invisible.py` (scan / reveal / sanitize),
+`examples/invisible_demo.py`. Public documentation: Riley Goodside; Johann
+Rehberger / *Embrace The Red* (ASCII smuggling in LLM apps); the Unicode Tags
+prompt-injection writeups.
+
+**Note for this repo.** Parrot sanitizes its own egress — no commit message, PR
+comment, or output here carries invisible codepoints. The scanner is the
+deliverable; the smuggling encoders in `invisible.py` are test fixtures only.
+
+---
+
 ### F-005 · 2026-08-20 · String-composition attacks vs. a decode-defense · High · confirmed
 
 **Observation.** Obfuscating the 99 English injection/jailbreak/extraction

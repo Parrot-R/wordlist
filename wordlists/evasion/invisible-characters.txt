@@ -1,0 +1,20 @@
+# category: evasion / invisible-characters
+# purpose: codepoints used to smuggle invisible payloads (ASCII smuggling /
+#          invisible prompt injection). Listed by name+hex so this file stays
+#          greppable — the literal characters render as nothing.
+# use: build detectors/sanitizers; see examples/invisible.py and journal F-006.
+# source-level: publicly documented (Riley Goodside; Rehberger / Embrace The Red).
+U+200B ZERO WIDTH SPACE
+U+200C ZERO WIDTH NON-JOINER
+U+200D ZERO WIDTH JOINER
+U+2060 WORD JOINER
+U+FEFF ZERO WIDTH NO-BREAK SPACE (BOM)
+U+00AD SOFT HYPHEN
+U+180E MONGOLIAN VOWEL SEPARATOR
+U+2061 FUNCTION APPLICATION
+U+2062 INVISIBLE TIMES
+U+2063 INVISIBLE SEPARATOR
+U+2064 INVISIBLE PLUS
+U+E0000..U+E007F UNICODE TAGS BLOCK (invisible ASCII mirror)
+U+E0001 LANGUAGE TAG
+U+E007F CANCEL TAG

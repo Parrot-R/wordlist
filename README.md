@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/"><img alt="OWASP LLM Top 10" src="https://img.shields.io/badge/OWASP-LLM%20Top%2010-blue"></a>
-  <img alt="phrases" src="https://img.shields.io/badge/phrases-240%2B-e4572e">
+  <img alt="phrases" src="https://img.shields.io/badge/phrases-250%2B-e4572e">
   <img alt="languages" src="https://img.shields.io/badge/languages-11-845d41">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="intent" src="https://img.shields.io/badge/intent-defensive-9aa0a6">
@@ -121,6 +121,14 @@ python3 examples/ensemble_demo.py
 ```
 
 Encodings (leetspeak, Base64, ROT13, reversal, chains) drop the filter to 0%; an iterative decode + Unicode-normalize pre-pass fully recovers the *known* transforms — while a Caesar-7 shift and Cyrillic homoglyphs stay at 0%, showing exactly where enumerate-and-invert ends and semantic defense has to start.
+
+A third demo catches **ASCII smuggling** — invisible payloads hidden in zero-width characters and the Unicode Tags block:
+
+```bash
+python3 examples/invisible_demo.py
+```
+
+A `"lgtm, minor cleanup"` commit message that carries 28 invisible codepoints decoding to a hidden instruction — `grep` finds nothing, the scanner flags all 28, reveals the text, and strips it. Sanitize on **ingestion and egress**: the footprint channel (payloads smuggled into an agent's own commits/comments) is the half most pipelines forget.
 
 ## Scope & ethics
 
